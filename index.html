@@ -5310,18 +5310,16 @@
             task2Select.innerHTML = '<option value="">Select task...</option>';
 
             tasks.forEach((task, index) => {
-                // Exclude Pay Date and Payroll Cut Off from constraints
-                if (task.name !== 'Pay Date' && task.name !== 'Payroll Cut Off') {
-                    const option1 = document.createElement('option');
-                    option1.value = index;
-                    option1.textContent = task.name;
-                    task1Select.appendChild(option1);
+                // Include all tasks in constraint dropdowns
+                const option1 = document.createElement('option');
+                option1.value = index;
+                option1.textContent = task.name;
+                task1Select.appendChild(option1);
 
-                    const option2 = document.createElement('option');
-                    option2.value = index;
-                    option2.textContent = task.name;
-                    task2Select.appendChild(option2);
-                }
+                const option2 = document.createElement('option');
+                option2.value = index;
+                option2.textContent = task.name;
+                task2Select.appendChild(option2);
             });
         }
 
