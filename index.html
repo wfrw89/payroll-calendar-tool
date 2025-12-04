@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payroll Calendar Generator v3.8</title>
+    <title>Payroll Calendar Generator v4.0</title>
 
     <!-- External Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
@@ -732,11 +732,19 @@
 
         .legend {
             display: flex;
-            gap: 24px;
+            justify-content: space-between;
+            align-items: center;
             margin-top: 20px;
             padding: 16px;
             background: #fafafa;
             border-radius: 8px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .legend-items {
+            display: flex;
+            gap: 24px;
             flex-wrap: wrap;
         }
 
@@ -746,6 +754,29 @@
             gap: 8px;
             font-size: 13px;
             color: var(--text-medium);
+        }
+
+        .add-offcycle-btn {
+            background: var(--primary-purple);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .add-offcycle-btn:hover {
+            background: var(--primary-purple-light);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .add-offcycle-btn:active {
+            transform: translateY(0);
         }
 
         @media (max-width: 768px) {
@@ -1022,12 +1053,171 @@
             margin: 20px 0;
             padding-top: 20px;
         }
+
+        /* Off-Cycle Wizard Styles (v4.0) */
+        .wizard-modal {
+            max-width: 700px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .wizard-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            padding: 0 20px;
+        }
+
+        .wizard-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .wizard-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: var(--border-light);
+            z-index: 0;
+        }
+
+        .wizard-step.active:not(:last-child)::after {
+            background: var(--primary-purple);
+        }
+
+        .wizard-step-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--border-light);
+            color: var(--text-medium);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .wizard-step.active .wizard-step-number {
+            background: var(--primary-purple);
+            color: white;
+        }
+
+        .wizard-step.completed .wizard-step-number {
+            background: var(--success-teal);
+            color: white;
+        }
+
+        .wizard-step-label {
+            font-size: 12px;
+            color: var(--text-medium);
+            font-weight: 500;
+        }
+
+        .wizard-step.active .wizard-step-label {
+            color: var(--primary-purple);
+            font-weight: 600;
+        }
+
+        .wizard-content {
+            min-height: 300px;
+            max-height: 50vh;
+            overflow-y: auto;
+            margin-bottom: 24px;
+            flex: 1;
+        }
+
+        .wizard-panel {
+            display: none;
+        }
+
+        .wizard-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .wizard-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .option-card {
+            border: 2px solid var(--border-light);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 12px;
+        }
+
+        .option-card:hover {
+            border-color: var(--primary-purple-light);
+            background: #f8f7ff;
+        }
+
+        .option-card.selected {
+            border-color: var(--primary-purple);
+            background: #f0efff;
+        }
+
+        .option-card h4 {
+            margin: 0 0 8px 0;
+            color: var(--text-dark);
+            font-size: 16px;
+        }
+
+        .option-card p {
+            margin: 0;
+            color: var(--text-medium);
+            font-size: 13px;
+        }
+
+        .period-selector {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .period-checkbox {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .period-checkbox:hover {
+            background: #fafafa;
+        }
+
+        .period-checkbox input[type="checkbox"] {
+            margin-right: 12px;
+        }
+
+        .offcycle-row {
+            background: #FEF3C7 !important;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Payroll Calendar Generator <span style="font-size: 0.6em; color: var(--primary-purple); font-weight: 600;">v3.8</span></h1>
+            <h1>Payroll Calendar Generator <span style="font-size: 0.6em; color: var(--primary-purple); font-weight: 600;">v4.0</span></h1>
             <p>Create accurate payroll calendars with bank holidays and working day calculations</p>
         </div>
 
@@ -1207,14 +1397,17 @@
             <div class="card-header">Calendar Preview</div>
 
             <div class="legend">
-                <div class="legend-item">
-                    <span class="holiday-indicator"></span>
-                    <span>Bank holiday affected this period</span>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <span class="holiday-indicator"></span>
+                        <span>Bank holiday affected this period</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="adjustment-indicator"></span>
+                        <span>Timeline auto-adjusted to fit within period</span>
+                    </div>
                 </div>
-                <div class="legend-item">
-                    <span class="adjustment-indicator"></span>
-                    <span>Timeline auto-adjusted to fit within period</span>
-                </div>
+                <button class="add-offcycle-btn" onclick="openOffCycleWizard()">+ Add Off-Cycle(s)</button>
             </div>
 
             <div id="calendarPreview"></div>
@@ -1311,6 +1504,30 @@
         let originalCutoffDates = []; // Store original cutoff dates to prevent recalculation when manual holidays are added
         let taskConstraints = []; // Array of {id, task1Index, task2Index, task1Name, task2Name} objects for same-date prevention
         let taskDateOverrides = {}; // Object mapping "periodIndex-taskName" to Date for manual constraint resolution
+
+        // Off-Cycle Management (v4.0)
+        let offCyclePeriods = []; // Array of off-cycle period configurations
+        /* Off-cycle period object structure:
+        {
+            id: unique identifier (timestamp-based),
+            placement: 'before' | 'after',
+            relativeToPeriods: [array of period indices],
+            payDates: {
+                mode: 'offset' | 'manual',
+                offsetDays: number (if mode is offset),
+                dates: {periodIndex: Date} (if mode is manual or calculated from offset)
+            },
+            tasks: {
+                mode: 'standard' | 'custom',
+                selectedTasks: [array of task indices] (if custom),
+                offsets: {
+                    mode: 'standard' | 'custom',
+                    customOffsets: {taskIndex: offsetValue} (if custom)
+                }
+            },
+            advancedRules: [array of constraint objects matching taskConstraints format]
+        }
+        */
 
         function init() {
             populateCountryDropdowns();
@@ -3231,6 +3448,276 @@
                 }
             });
 
+            // ========================================
+            // OFF-CYCLE GENERATION (v4.0)
+            // ========================================
+            if (offCyclePeriods.length > 0) {
+                console.log(`🔄 Generating ${offCyclePeriods.length} off-cycle configuration(s)...`);
+
+                offCyclePeriods.forEach((offCycleConfig, configIndex) => {
+                    console.log(`  Processing off-cycle config #${configIndex + 1}:`, offCycleConfig);
+
+                    offCycleConfig.relativeToPeriods.forEach(relativePeriodIdx => {
+                        // Find the actual period in generatedCalendar (skip existing off-cycles)
+                        const onCyclePeriods = generatedCalendar.filter(entry => !entry.isOffCycle);
+                        const referencePeriodTasks = onCyclePeriods.filter(entry => entry.period === relativePeriodIdx);
+
+                        if (referencePeriodTasks.length === 0) {
+                            console.warn(`⚠️ Reference period ${relativePeriodIdx} not found, skipping off-cycle`);
+                            return;
+                        }
+
+                        const referencePayDateEntry = referencePeriodTasks.find(entry => entry.task === 'Pay Date');
+                        if (!referencePayDateEntry) {
+                            console.warn(`⚠️ Pay Date not found for period ${relativePeriodIdx}, skipping off-cycle`);
+                            return;
+                        }
+
+                        const referencePayDate = referencePayDateEntry.date;
+                        const referenceLabel = referencePeriodTasks[0].periodLabel;
+
+                        // Calculate off-cycle pay date
+                        let offCyclePayDate;
+                        if (offCycleConfig.payDates.mode === 'manual' && offCycleConfig.payDates.dates[relativePeriodIdx]) {
+                            offCyclePayDate = new Date(offCycleConfig.payDates.dates[relativePeriodIdx]);
+                        } else {
+                            // Use offset mode
+                            offCyclePayDate = new Date(referencePayDate);
+                            const offsetDays = offCycleConfig.payDates.offsetDays || 7;
+                            if (offCycleConfig.placement === 'before') {
+                                offCyclePayDate.setDate(offCyclePayDate.getDate() - offsetDays);
+                            } else {
+                                offCyclePayDate.setDate(offCyclePayDate.getDate() + offsetDays);
+                            }
+                        }
+
+                        // Adjust for weekends/holidays
+                        const adjustedPayDate = moveToPriorWorkingDay(offCyclePayDate, uniqueCountries);
+                        offCyclePayDate = adjustedPayDate.date;
+
+                        // Determine off-cycle period index (using decimal notation)
+                        let offCyclePeriodIndex;
+                        if (offCycleConfig.placement === 'before') {
+                            offCyclePeriodIndex = relativePeriodIdx - 0.5;
+                        } else {
+                            offCyclePeriodIndex = relativePeriodIdx + 0.5;
+                        }
+
+                        // Generate off-cycle label - use custom name if provided
+                        let offCycleLabel;
+                        if (offCycleConfig.customName && offCycleConfig.customName.trim()) {
+                            offCycleLabel = offCycleConfig.customName.trim();
+                        } else {
+                            offCycleLabel = `${referenceLabel} ${offCycleConfig.placement === 'before' ? 'Pre' : 'Post'}-Off-Cycle`;
+                        }
+
+                        // Determine which tasks to include
+                        let offCycleTasks = [];
+                        if (offCycleConfig.tasks.mode === 'custom' && offCycleConfig.tasks.selectedTasks.length > 0) {
+                            offCycleTasks = offCycleConfig.tasks.selectedTasks.map(idx => tasks[idx]);
+                            // v4.0: Always include Pay Date for off-cycles (it's configured in Step 3, not Step 4)
+                            const payDateTask = tasks.find(t => t.name === 'Pay Date');
+                            if (payDateTask && !offCycleTasks.includes(payDateTask)) {
+                                offCycleTasks.unshift(payDateTask); // Add at beginning
+                            }
+                        } else {
+                            // Use all tasks
+                            offCycleTasks = [...tasks];
+                        }
+
+                        // Get task offsets
+                        const offCycleOffsets = {};
+                        offCycleTasks.forEach((task, idx) => {
+                            const taskIndex = tasks.indexOf(task);
+                            if (offCycleConfig.tasks.offsets.mode === 'custom' && offCycleConfig.tasks.offsets.customOffsets[taskIndex] !== undefined) {
+                                offCycleOffsets[taskIndex] = offCycleConfig.tasks.offsets.customOffsets[taskIndex];
+                            } else {
+                                offCycleOffsets[taskIndex] = task.offset;
+                            }
+                        });
+
+                        // Calculate cutoff date for off-cycle
+                        let offCycleCutoffDate = new Date(offCyclePayDate);
+                        const cutoffOffset = offCycleOffsets[0] || 10; // Use Payroll Cut Off offset
+                        for (let i = 0; i < cutoffOffset; i++) {
+                            offCycleCutoffDate.setDate(offCycleCutoffDate.getDate() - 1);
+                            while (isWeekend(offCycleCutoffDate, uniqueCountries) || isNonWorkingDay(offCycleCutoffDate, uniqueCountries)) {
+                                offCycleCutoffDate.setDate(offCycleCutoffDate.getDate() - 1);
+                            }
+                        }
+
+                        // Generate task entries for off-cycle
+                        const offCyclePeriodTasks = [];
+
+                        offCycleTasks.forEach((task, idx) => {
+                            const taskIndex = tasks.indexOf(task);
+                            const taskOffset = offCycleOffsets[taskIndex];
+                            let taskDate;
+
+                            // v4.0: Check if a specific date was provided for this task
+                            // Priority order:
+                            // 1. Period-specific date (for individual config): "periodIdx_taskIndex"
+                            // 2. First period's date (for apply-to-all): "firstPeriodIdx_taskIndex"
+                            // 3. Simple key (backwards compatibility): "taskIndex"
+                            const compositeKey = `${relativePeriodIdx}_${taskIndex}`;
+                            const firstPeriodKey = `${offCycleConfig.relativeToPeriods[0]}_${taskIndex}`;
+                            const hasSpecificDate = offCycleConfig.tasks.offsets.specificDates &&
+                                                   (offCycleConfig.tasks.offsets.specificDates[compositeKey] ||
+                                                    offCycleConfig.tasks.offsets.specificDates[firstPeriodKey] ||
+                                                    offCycleConfig.tasks.offsets.specificDates[taskIndex]);
+
+                            if (hasSpecificDate) {
+                                // Use the specific date provided
+                                const storedDate = offCycleConfig.tasks.offsets.specificDates[compositeKey] ||
+                                                  offCycleConfig.tasks.offsets.specificDates[firstPeriodKey] ||
+                                                  offCycleConfig.tasks.offsets.specificDates[taskIndex];
+
+                                // v4.0: If using first period's date as reference (apply-to-all scenario),
+                                // calculate the equivalent date for this period based on the offset from first OFF-CYCLE's pay date
+                                if (offCycleConfig.tasks.offsets.specificDates[firstPeriodKey] && !offCycleConfig.tasks.offsets.specificDates[compositeKey]) {
+                                    // This is an apply-to-all scenario
+                                    // Calculate what the first off-cycle's pay date would be
+                                    const firstRelativePeriodIdx = offCycleConfig.relativeToPeriods[0];
+                                    const firstRefPeriod = generatedCalendar.find(e => e.period === firstRelativePeriodIdx && e.task === 'Pay Date' && !e.isOffCycle);
+
+                                    if (firstRefPeriod) {
+                                        let firstOffCyclePayDate;
+                                        if (offCycleConfig.payDates.mode === 'manual' && offCycleConfig.payDates.dates[firstRelativePeriodIdx]) {
+                                            firstOffCyclePayDate = new Date(offCycleConfig.payDates.dates[firstRelativePeriodIdx]);
+                                        } else {
+                                            // Calculate from reference period and offset
+                                            firstOffCyclePayDate = new Date(firstRefPeriod.date);
+                                            const offsetDays = offCycleConfig.payDates.offsetDays || 7;
+                                            if (offCycleConfig.placement === 'before') {
+                                                firstOffCyclePayDate.setDate(firstOffCyclePayDate.getDate() - offsetDays);
+                                            } else {
+                                                firstOffCyclePayDate.setDate(firstOffCyclePayDate.getDate() + offsetDays);
+                                            }
+                                        }
+
+                                        // Adjust for weekends/holidays
+                                        const adjustedFirst = moveToPriorWorkingDay(firstOffCyclePayDate, uniqueCountries);
+                                        firstOffCyclePayDate = adjustedFirst.date;
+
+                                        // Calculate the working days offset between the stored date and first off-cycle's pay date
+                                        const storedTaskDate = new Date(storedDate);
+
+                                        // Calculate working days difference
+                                        let daysDiff = 0;
+                                        let isBeforePayDate = storedTaskDate < firstOffCyclePayDate;
+                                        let tempDate = new Date(isBeforePayDate ? storedTaskDate : firstOffCyclePayDate);
+                                        let endDate = new Date(isBeforePayDate ? firstOffCyclePayDate : storedTaskDate);
+
+                                        while (tempDate < endDate) {
+                                            tempDate.setDate(tempDate.getDate() + 1);
+                                            if (!isWeekend(tempDate, uniqueCountries) && !isNonWorkingDay(tempDate, uniqueCountries)) {
+                                                daysDiff++;
+                                            }
+                                        }
+
+                                        // Apply the same working days offset to current off-cycle's pay date
+                                        taskDate = new Date(offCyclePayDate);
+                                        if (isBeforePayDate) {
+                                            // Task was before pay date in first off-cycle
+                                            for (let i = 0; i < daysDiff; i++) {
+                                                taskDate.setDate(taskDate.getDate() - 1);
+                                                while (isWeekend(taskDate, uniqueCountries) || isNonWorkingDay(taskDate, uniqueCountries)) {
+                                                    taskDate.setDate(taskDate.getDate() - 1);
+                                                }
+                                            }
+                                        } else {
+                                            // Task was after pay date in first off-cycle
+                                            for (let i = 0; i < daysDiff; i++) {
+                                                taskDate.setDate(taskDate.getDate() + 1);
+                                                while (isWeekend(taskDate, uniqueCountries) || isNonWorkingDay(taskDate, uniqueCountries)) {
+                                                    taskDate.setDate(taskDate.getDate() + 1);
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        // Fallback: use stored date directly
+                                        taskDate = new Date(storedDate);
+                                    }
+                                } else {
+                                    // Use the stored date directly (period-specific or simple key)
+                                    taskDate = new Date(storedDate);
+                                }
+                            } else if (task.name === 'Pay Date') {
+                                taskDate = new Date(offCyclePayDate);
+                            } else if (task.name === 'Payroll Cut Off') {
+                                taskDate = new Date(offCycleCutoffDate);
+                            } else {
+                                // Calculate based on offset and anchor
+                                if (task.beforePayDate) {
+                                    taskDate = new Date(offCyclePayDate);
+                                    for (let i = 0; i < Math.abs(taskOffset); i++) {
+                                        taskDate.setDate(taskDate.getDate() - 1);
+                                        while (isWeekend(taskDate, uniqueCountries) || isNonWorkingDay(taskDate, uniqueCountries)) {
+                                            taskDate.setDate(taskDate.getDate() - 1);
+                                        }
+                                    }
+                                } else if (task.afterPayDate) {
+                                    taskDate = new Date(offCyclePayDate);
+                                    for (let i = 0; i < Math.abs(taskOffset); i++) {
+                                        taskDate.setDate(taskDate.getDate() + 1);
+                                        while (isWeekend(taskDate, uniqueCountries) || isNonWorkingDay(taskDate, uniqueCountries)) {
+                                            taskDate.setDate(taskDate.getDate() + 1);
+                                        }
+                                    }
+                                } else {
+                                    // Default: offset from cutoff
+                                    taskDate = new Date(offCycleCutoffDate);
+                                    const offsetFromCutoff = taskOffset - cutoffOffset;
+                                    if (offsetFromCutoff < 0) {
+                                        for (let i = 0; i < Math.abs(offsetFromCutoff); i++) {
+                                            taskDate.setDate(taskDate.getDate() - 1);
+                                            while (isWeekend(taskDate, uniqueCountries) || isNonWorkingDay(taskDate, uniqueCountries)) {
+                                                taskDate.setDate(taskDate.getDate() - 1);
+                                            }
+                                        }
+                                    } else {
+                                        for (let i = 0; i < offsetFromCutoff; i++) {
+                                            taskDate.setDate(taskDate.getDate() + 1);
+                                            while (isWeekend(taskDate, uniqueCountries) || isNonWorkingDay(taskDate, uniqueCountries)) {
+                                                taskDate.setDate(taskDate.getDate() + 1);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            offCyclePeriodTasks.push({
+                                period: offCyclePeriodIndex,
+                                periodLabel: offCycleLabel,
+                                task: task.name,
+                                date: taskDate,
+                                month: taskDate.getMonth(),
+                                periodInMonth: 1,
+                                adjusted: false,
+                                originalOffset: taskOffset,
+                                adjustedOffset: taskOffset,
+                                isOffCycle: true,
+                                offCycleConfigId: offCycleConfig.id
+                            });
+                        });
+
+                        // Add off-cycle tasks to generated calendar
+                        generatedCalendar.push(...offCyclePeriodTasks);
+
+                        console.log(`  ✅ Generated off-cycle ${offCycleLabel} with ${offCyclePeriodTasks.length} tasks`);
+                    });
+                });
+
+                // Sort generatedCalendar by period index to maintain proper order
+                generatedCalendar.sort((a, b) => {
+                    if (a.period !== b.period) return a.period - b.period;
+                    // Within same period, sort by date
+                    return a.date - b.date;
+                });
+
+                console.log(`✅ Off-cycle generation complete. Total calendar entries: ${generatedCalendar.length}`);
+            }
+
             // Re-add all manual holidays before rendering so they show up in the UI
             if (periodManualHolidays.length > 0) {
                 if (!bankHolidays[employeeCountry]) {
@@ -3300,7 +3787,9 @@
                         hasAdjustment: false,
                         adjustedTasks: [],
                         overriddenTasks: [], // Track manually overridden tasks
-                        payDateAdjustment: null // Store pay date adjustment info if shifted due to holiday
+                        payDateAdjustment: null, // Store pay date adjustment info if shifted due to holiday
+                        isOffCycle: entry.isOffCycle || false, // v4.0: Track if this is an off-cycle period
+                        offCycleConfigId: entry.offCycleConfigId // v4.0: Store off-cycle config ID for editing
                     };
                 }
                 calendarByPeriod[entry.period].tasks[entry.task] = entry.date;
@@ -3447,14 +3936,23 @@
             });
             html += '<th>Bank Holidays and Processing Adjustments</th></tr></thead><tbody>';
 
-            Object.keys(calendarByPeriod).forEach(period => {
+            // v4.0: Sort period keys numerically to ensure off-cycles appear in correct order
+            // (before = period - 0.5 appears above, after = period + 0.5 appears below)
+            const sortedPeriods = Object.keys(calendarByPeriod)
+                .map(p => parseFloat(p))
+                .sort((a, b) => a - b);
+
+            sortedPeriods.forEach(period => {
                 const periodData = calendarByPeriod[period];
                 const payDateTaskObj = periodData.tasks['Pay Date'];
                 const payDateStr = payDateTaskObj ? formatDateToString(payDateTaskObj) : '';
 
                 const hasOverride = payDateOverrides[period] !== undefined;
 
-                html += `<tr><td>
+                // v4.0: Add off-cycle row class for styling
+                const rowClass = periodData.isOffCycle ? ' class="offcycle-row"' : '';
+
+                html += `<tr${rowClass}><td>
                     <div class="period-label" style="position: relative;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>${periodData.label}</div>
@@ -3644,7 +4142,9 @@
                         hasHolidayImpact: false,
                         hasAdjustment: false,
                         adjustedTasks: [],
-                        payDateAdjustment: null // Store pay date adjustment info if shifted due to holiday
+                        payDateAdjustment: null, // Store pay date adjustment info if shifted due to holiday
+                        isOffCycle: entry.isOffCycle || false, // v4.0: Track if this is an off-cycle period
+                        offCycleConfigId: entry.offCycleConfigId // v4.0: Store off-cycle config ID
                     };
                 }
                 calendarByPeriod[entry.period].tasks[entry.task] = entry.date;
@@ -3802,7 +4302,12 @@
             });
             const data = [['Pay Period', 'Status', ...taskHeaders, 'Bank Holidays and Processing Adjustments']];
 
-            Object.keys(calendarByPeriod).forEach(period => {
+            // v4.0: Sort period keys numerically to ensure off-cycles appear in correct order
+            const sortedPeriods = Object.keys(calendarByPeriod)
+                .map(p => parseFloat(p))
+                .sort((a, b) => a - b);
+
+            sortedPeriods.forEach(period => {
                 const periodData = calendarByPeriod[period];
 
                 // Create status indicators
@@ -3890,13 +4395,17 @@
             }
 
             // Style data rows with uniform styling
-            const periodDataArray = Object.values(calendarByPeriod);
+            // v4.0: Use sorted periods to maintain correct order for off-cycle styling
+            const periodDataArray = sortedPeriods.map(p => calendarByPeriod[p]);
             for (let R = range.s.r + 1; R <= range.e.r; ++R) {
                 const period = R - 1;
                 const periodData = periodDataArray[period];
                 if (!periodData) continue;
 
                 const isLastRow = (R === range.e.r);
+                // v4.0: Check if this is an off-cycle period for yellow background
+                const isOffCycle = periodData.isOffCycle || false;
+                const bgColor = isOffCycle ? "FEF3C7" : "FFFFFF"; // Yellow for off-cycles, white for regular
 
                 for (let C = range.s.c; C <= range.e.c; ++C) {
                     const address = XLSX.utils.encode_col(C) + (R + 1);
@@ -3905,7 +4414,7 @@
                     const isFirstCol = (C === range.s.c);
                     const isLastCol = (C === range.e.c);
 
-                    // Uniform styling for all cells with solid white fill and vertical borders only
+                    // Uniform styling for all cells with appropriate fill color
                     ws[address].s = {
                         alignment: {
                             horizontal: "center",
@@ -3918,9 +4427,9 @@
                             color: { rgb: "000000" }  // Explicit black text color for readability
                         },
                         fill: {
-                            fgColor: { rgb: "FFFFFF" },
+                            fgColor: { rgb: bgColor },
                             patternType: "solid"
-                        },  // Solid white fill to hide gridlines
+                        },  // Yellow for off-cycles (#FEF3C7), white for regular periods
                         border: {
                             bottom: isLastRow ? { style: "medium", color: { rgb: "000000" } } : undefined,
                             left: isFirstCol ? { style: "medium", color: { rgb: "000000" } } : { style: "thin", color: { rgb: "D3D3D1" } },
@@ -4024,14 +4533,20 @@
                 if (!calendarByPeriod[entry.period]) {
                     calendarByPeriod[entry.period] = {
                         label: entry.periodLabel,
-                        tasks: {}
+                        tasks: {},
+                        isOffCycle: entry.isOffCycle || false // v4.0: Track if this is an off-cycle period
                     };
                 }
                 calendarByPeriod[entry.period].tasks[entry.task] = entry.date;
             });
 
             const tableData = [];
-            Object.keys(calendarByPeriod).forEach(period => {
+            // v4.0: Sort period keys numerically to ensure off-cycles appear in correct order
+            const sortedPeriods = Object.keys(calendarByPeriod)
+                .map(p => parseFloat(p))
+                .sort((a, b) => a - b);
+
+            sortedPeriods.forEach(period => {
                 const periodData = calendarByPeriod[period];
                 const row = [periodData.label];
 
@@ -4061,6 +4576,9 @@
                 return t.name;
             });
 
+            // v4.0: Build array to track which rows are off-cycles for styling
+            const offCycleRows = sortedPeriods.map(p => calendarByPeriod[p].isOffCycle || false);
+
             doc.autoTable({
                 head: [['Pay Period', ...pdfTaskHeaders]],
                 body: tableData,
@@ -4080,6 +4598,12 @@
                 },
                 columnStyles: {
                     0: { fontStyle: 'bold', fillColor: [250, 250, 250] }
+                },
+                // v4.0: Apply yellow background to off-cycle rows
+                didParseCell: function(data) {
+                    if (data.section === 'body' && offCycleRows[data.row.index]) {
+                        data.cell.styles.fillColor = [254, 243, 199]; // #FEF3C7 yellow for off-cycles
+                    }
                 }
             });
 
@@ -4126,6 +4650,7 @@
                 tasks: tasks.filter(t => !t.core),
                 taskOffsets: tasks.map(t => ({ name: t.name, offset: t.offset, dueTime: t.dueTime || '' })),
                 taskConstraints: taskConstraints,
+                offCyclePeriods: offCyclePeriods, // v4.0: Save off-cycle configurations
                 savedDate: new Date().toISOString()
             };
 
@@ -4241,6 +4766,24 @@
                 taskConstraints = [];
             }
 
+            // v4.0: Restore off-cycle periods
+            if (config.offCyclePeriods && Array.isArray(config.offCyclePeriods)) {
+                // Restore dates from JSON strings
+                offCyclePeriods = config.offCyclePeriods.map(ocp => ({
+                    ...ocp,
+                    payDates: {
+                        ...ocp.payDates,
+                        dates: Object.keys(ocp.payDates.dates || {}).reduce((acc, key) => {
+                            acc[key] = new Date(ocp.payDates.dates[key]);
+                            return acc;
+                        }, {})
+                    }
+                }));
+                console.log(`✅ Restored ${offCyclePeriods.length} off-cycle configuration(s)`);
+            } else {
+                offCyclePeriods = [];
+            }
+
             renderTasks();
             showMessage('Configuration loaded successfully!', 'success');
         }
@@ -4272,6 +4815,7 @@
             tasks = JSON.parse(JSON.stringify(defaultTasks));
             cutoffConfig = { mode: 'offset', offset: 10 };
             taskConstraints = [];
+            offCyclePeriods = []; // v4.0: Clear off-cycle configurations
             updateConstraintCount();
             renderTasks();
 
@@ -4494,8 +5038,8 @@
         function showUnifiedEditModal(periodIndex, defaultTab = 'periodSettings') {
             console.log('🔧 showUnifiedEditModal called with:', { periodIndex, defaultTab });
 
-            // Ensure periodIndex is a number
-            periodIndex = parseInt(periodIndex);
+            // Ensure periodIndex is a number (use parseFloat to preserve decimal indices for off-cycles)
+            periodIndex = parseFloat(periodIndex);
 
             const modal = document.getElementById('unifiedEditModal');
             const periodLabel = document.getElementById('unifiedPeriodLabel');
@@ -4513,7 +5057,13 @@
             // Find the period label from generated calendar
             const periodEntry = generatedCalendar.find(e => e.period === periodIndex);
             if (periodEntry) {
-                periodLabel.textContent = periodEntry.periodLabel;
+                // v4.0: Add off-cycle badge if this is an off-cycle period
+                const isOffCycle = periodEntry.isOffCycle || false;
+                if (isOffCycle) {
+                    periodLabel.innerHTML = `${periodEntry.periodLabel} <span style="background: #FEF3C7; padding: 2px 8px; border-radius: 4px; font-size: 11px; color: #92400E; font-weight: 600; margin-left: 8px;">OFF-CYCLE</span>`;
+                } else {
+                    periodLabel.textContent = periodEntry.periodLabel;
+                }
 
                 // Find the pay date for this period
                 const payDateTask = generatedCalendar.find(e => e.period === periodIndex && e.task === 'Pay Date');
@@ -4584,7 +5134,7 @@
         }
 
         function applyPeriodSettings() {
-            const periodIndex = parseInt(document.getElementById('overridePayDateInput').dataset.periodIndex);
+            const periodIndex = parseFloat(document.getElementById('overridePayDateInput').dataset.periodIndex);
             const newPayDate = document.getElementById('overridePayDateInput').value;
             const newCutoff = document.getElementById('overrideCutoffInput').value;
             const manualHolidayDate = document.getElementById('manualHolidayDate').value;
@@ -4643,7 +5193,7 @@
         }
 
         function removePeriodOverrides() {
-            const periodIndex = parseInt(document.getElementById('overridePayDateInput').dataset.periodIndex);
+            const periodIndex = parseFloat(document.getElementById('overridePayDateInput').dataset.periodIndex);
 
             // Remove all period-level overrides
             delete payDateOverrides[periodIndex];
@@ -5048,7 +5598,7 @@
 
             // Process date overrides
             dateInputs.forEach(input => {
-                const periodIndex = parseInt(input.dataset.periodIndex);
+                const periodIndex = parseFloat(input.dataset.periodIndex);
                 const taskName = input.dataset.taskName;
                 const overrideKey = `${periodIndex}-${taskName}`;
                 const newDate = input.value;
@@ -5107,7 +5657,7 @@
                 showMessage('Task date & time overrides applied', 'success');
             }
 
-            closeConstraintOverrideModal();
+            closeUnifiedEditModal(); // v4.0: Fixed - was closing wrong modal
         }
 
         function removeAllTaskOverrides() {
@@ -5115,7 +5665,7 @@
             const inputs = document.querySelectorAll('#taskOverrideList .task-date-input');
             if (inputs.length === 0) return;
 
-            const periodIndex = parseInt(inputs[0].dataset.periodIndex);
+            const periodIndex = parseFloat(inputs[0].dataset.periodIndex);
 
             // Remove all overrides for this period
             const keysToRemove = Object.keys(taskDateOverrides).filter(
@@ -5491,13 +6041,820 @@
             return '';
         }
 
+        // ========================================
+        // OFF-CYCLE WIZARD FUNCTIONS (v4.0)
+        // ========================================
+
+        let wizardState = {
+            currentStep: 1,
+            quantity: null, // 'single' or 'multiple'
+            placement: null, // 'before' or 'after'
+            selectedPeriods: [],
+            offCycleName: '', // v4.0: Optional custom name for off-cycle
+            payDateMode: 'manual', // 'offset' or 'manual' - default to manual
+            payDateOffset: 7,
+            manualPayDates: {},
+            taskMode: 'standard', // 'standard' or 'custom'
+            selectedTasks: [],
+            offsetMode: 'standard', // 'standard' or 'custom'
+            customOffsets: {},
+            taskDateMode: {}, // v4.0: Track which tasks use specific dates vs offsets
+            taskSpecificDates: {}, // v4.0: Store specific dates for tasks
+            constraints: []
+        };
+
+        function openOffCycleWizard() {
+            // Check if calendar has been generated
+            if (generatedCalendar.length === 0) {
+                showMessage('Please generate a payroll calendar first before adding off-cycles.', 'error');
+                return;
+            }
+
+            // Reset wizard state
+            wizardState = {
+                currentStep: 1,
+                quantity: 'single', // v4.0: Default to single off-cycle
+                placement: null,
+                selectedPeriods: [],
+                offCycleName: '',
+                payDateMode: 'manual',
+                payDateOffset: 7,
+                manualPayDates: {},
+                taskMode: 'standard',
+                selectedTasks: [],
+                offsetMode: 'custom', // v4.0: Default to custom (date picker) mode
+                customOffsets: {},
+                taskDateMode: {},
+                taskSpecificDates: {},
+                constraints: []
+            };
+
+            // Reset the name input field
+            const nameInput = document.getElementById('offCycleName');
+            if (nameInput) nameInput.value = '';
+
+            // Show wizard
+            document.getElementById('offCycleWizard').style.display = 'flex';
+            updateWizardStep(1);
+        }
+
+        function closeOffCycleWizard() {
+            document.getElementById('offCycleWizard').style.display = 'none';
+        }
+
+        function wizardNextStep() {
+            // Validate current step before proceeding
+            if (!validateWizardStep(wizardState.currentStep)) {
+                return;
+            }
+
+            // Move to next step
+            wizardState.currentStep++;
+            updateWizardStep(wizardState.currentStep);
+        }
+
+        function wizardPrevStep() {
+            wizardState.currentStep--;
+            updateWizardStep(wizardState.currentStep);
+        }
+
+        function updateWizardStep(step) {
+            // Update progress indicator
+            document.querySelectorAll('.wizard-step').forEach((el, index) => {
+                const stepNum = index + 1;
+                el.classList.remove('active', 'completed');
+                if (stepNum < step) {
+                    el.classList.add('completed');
+                } else if (stepNum === step) {
+                    el.classList.add('active');
+                }
+            });
+
+            // Update panels
+            document.querySelectorAll('.wizard-panel').forEach((panel, index) => {
+                panel.classList.remove('active');
+                if (index + 1 === step) {
+                    panel.classList.add('active');
+                }
+            });
+
+            // Update navigation buttons
+            const backBtn = document.getElementById('wizardBackBtn');
+            const nextBtn = document.getElementById('wizardNextBtn');
+            const finishBtn = document.getElementById('wizardFinishBtn');
+
+            backBtn.style.display = step > 1 ? 'block' : 'none';
+            nextBtn.style.display = step < 6 ? 'block' : 'none';
+            finishBtn.style.display = step === 6 ? 'block' : 'none';
+
+            // Populate dynamic content for each step
+            if (step === 1) {
+                // v4.0: Sync UI with default quantity selection
+                document.querySelectorAll('#wizardStep1 .option-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                if (wizardState.quantity === 'single') {
+                    document.getElementById('quantitySingle')?.classList.add('selected');
+                } else if (wizardState.quantity === 'multiple') {
+                    document.getElementById('quantityMultiple')?.classList.add('selected');
+                }
+            } else if (step === 2) {
+                populatePeriodSelectors();
+            } else if (step === 3) {
+                // v4.0: Ensure periods are captured before configuring pay dates
+                if (wizardState.quantity === 'single') {
+                    const singlePeriodSelect = document.getElementById('singlePeriodSelect');
+                    const singlePosition = document.getElementById('singlePosition');
+                    if (singlePeriodSelect && singlePeriodSelect.value) {
+                        wizardState.selectedPeriods = [parseInt(singlePeriodSelect.value)];
+                        wizardState.placement = singlePosition?.value || 'after';
+                    }
+                } else {
+                    updateSelectedPeriods();
+                }
+                // v4.0: Simplified - always manual mode
+                wizardState.payDateMode = 'manual';
+                populateManualPayDates();
+            } else if (step === 4) {
+                // v4.0: Simplified - always custom mode
+                wizardState.taskMode = 'custom';
+                populateTaskSelector();
+            } else if (step === 5) {
+                // v4.0: Simplified - always custom (date picker) mode
+                wizardState.offsetMode = 'custom';
+                populateOffsetEditor();
+            } else if (step === 6) {
+                renderOffCycleConstraints();
+            }
+        }
+
+        function validateWizardStep(step) {
+            switch(step) {
+                case 1:
+                    // v4.0: Default is pre-selected, validation always passes
+                    if (!wizardState.quantity) {
+                        showMessage('Please select whether you are adding a single or multiple off-cycles.', 'error');
+                        return false;
+                    }
+                    return true;
+
+                case 2:
+                    // v4.0: Auto-capture period selection before validating
+                    if (wizardState.quantity === 'single') {
+                        const singlePeriodSelect = document.getElementById('singlePeriodSelect');
+                        const singlePosition = document.getElementById('singlePosition');
+                        if (singlePeriodSelect && singlePeriodSelect.value) {
+                            wizardState.selectedPeriods = [parseInt(singlePeriodSelect.value)];
+                            wizardState.placement = singlePosition?.value || 'after';
+                        }
+                    } else {
+                        updateSelectedPeriods();
+                    }
+
+                    if (wizardState.selectedPeriods.length === 0) {
+                        showMessage('Please select at least one pay period.', 'error');
+                        return false;
+                    }
+                    return true;
+
+                case 3:
+                    // v4.0: Simplified - always manual mode
+                    // Check all manual dates are filled
+                    for (let periodIdx of wizardState.selectedPeriods) {
+                        if (!wizardState.manualPayDates[periodIdx]) {
+                            showMessage('Please enter pay dates for all selected periods.', 'error');
+                            return false;
+                        }
+                    }
+                    return true;
+
+                case 4:
+                    // v4.0: Simplified - always custom mode, must select at least one task
+                    if (wizardState.selectedTasks.length === 0) {
+                        showMessage('Please select at least one task for the off-cycle periods.', 'error');
+                        return false;
+                    }
+                    return true;
+
+                case 5:
+                    // v4.0: Offset validation is optional (date picker mode)
+                    return true;
+
+                case 6:
+                    // Constraints are optional
+                    return true;
+
+                default:
+                    return true;
+            }
+        }
+
+        // Step 1: Quantity Selection
+        function selectOffCycleQuantity(quantity) {
+            wizardState.quantity = quantity;
+
+            // Update UI
+            document.querySelectorAll('#wizardStep1 .option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById('quantity' + (quantity === 'single' ? 'Single' : 'Multiple')).classList.add('selected');
+        }
+
+        // Step 2: Period Placement
+        function populatePeriodSelectors() {
+            const singlePlacement = document.getElementById('singlePlacement');
+            const multiplePlacement = document.getElementById('multiplePlacement');
+            const singlePeriodSelect = document.getElementById('singlePeriodSelect');
+            const multiplePeriodSelect = document.getElementById('multiplePeriodSelect');
+
+            // Get unique periods (generatedCalendar has multiple entries per period, one per task)
+            const uniquePeriods = [];
+            const seenPeriods = new Set();
+            generatedCalendar.forEach(entry => {
+                if (!seenPeriods.has(entry.period) && !entry.isOffCycle) {
+                    seenPeriods.add(entry.period);
+                    uniquePeriods.push({
+                        index: entry.period,
+                        label: entry.periodLabel
+                    });
+                }
+            });
+
+            // Show appropriate placement UI
+            if (wizardState.quantity === 'single') {
+                singlePlacement.style.display = 'block';
+                multiplePlacement.style.display = 'none';
+
+                // Populate single period selector
+                singlePeriodSelect.innerHTML = '';
+                uniquePeriods.forEach(period => {
+                    const option = document.createElement('option');
+                    option.value = period.index;
+                    option.textContent = period.label;
+                    singlePeriodSelect.appendChild(option);
+                });
+
+                // Set default selection
+                if (wizardState.selectedPeriods.length === 0) {
+                    wizardState.selectedPeriods = [uniquePeriods[0]?.index || 0];
+                    wizardState.placement = 'after';
+                }
+            } else {
+                singlePlacement.style.display = 'none';
+                multiplePlacement.style.display = 'block';
+
+                // Populate multiple period checkboxes
+                multiplePeriodSelect.innerHTML = '';
+                uniquePeriods.forEach(period => {
+                    const checkbox = document.createElement('label');
+                    checkbox.className = 'period-checkbox';
+                    checkbox.innerHTML = `
+                        <input type="checkbox" value="${period.index}" onchange="updateSelectedPeriods()" ${wizardState.selectedPeriods.includes(period.index) ? 'checked' : ''}>
+                        <span>${period.label}</span>
+                    `;
+                    multiplePeriodSelect.appendChild(checkbox);
+                });
+
+                // Set default placement
+                if (!wizardState.placement) {
+                    wizardState.placement = 'after';
+                }
+            }
+        }
+
+        function updateSelectedPeriods() {
+            const checkboxes = document.querySelectorAll('#multiplePeriodSelect input[type="checkbox"]');
+            wizardState.selectedPeriods = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => parseInt(cb.value));
+
+            // Update placement from dropdown
+            wizardState.placement = document.getElementById(wizardState.quantity === 'single' ? 'singlePosition' : 'multiplePosition').value;
+        }
+
+        function toggleAllPeriods() {
+            const allCheckbox = document.getElementById('allPeriodsCheckbox');
+            const checkboxes = document.querySelectorAll('#multiplePeriodSelect input[type="checkbox"]');
+            const periodSelector = document.getElementById('periodSelectorContainer');
+
+            if (allCheckbox.checked) {
+                periodSelector.style.display = 'none';
+                // Select all periods
+                wizardState.selectedPeriods = [];
+                generatedCalendar.forEach((period, index) => {
+                    if (!period.isOffCycle) {
+                        wizardState.selectedPeriods.push(index);
+                    }
+                });
+            } else {
+                periodSelector.style.display = 'block';
+                updateSelectedPeriods();
+            }
+        }
+
+        // Step 3: Pay Date Configuration
+        // v4.0: Simplified - No mode selection, always manual
+        function updateWizardPayDateConfig() {
+            // IMPORTANT: Ensure selected periods are captured from Step 2 before populating dates
+            if (wizardState.quantity === 'single') {
+                const singlePeriodSelect = document.getElementById('singlePeriodSelect');
+                if (singlePeriodSelect && singlePeriodSelect.value) {
+                    wizardState.selectedPeriods = [parseInt(singlePeriodSelect.value)];
+                    wizardState.placement = document.getElementById('singlePosition')?.value || 'after';
+                }
+            } else {
+                updateSelectedPeriods();
+            }
+
+            // v4.0: Always manual mode
+            wizardState.payDateMode = 'manual';
+
+            // v4.0: Simplified - Always populate manual dates
+            populateManualPayDates();
+        }
+
+        function populateManualPayDates() {
+            console.log('🎯 populateManualPayDates called at', new Date().toISOString());
+
+            const container = document.getElementById('manualPayDateList');
+            if (!container) {
+                console.error('❌ manualPayDateList container not found!');
+                return;
+            }
+            console.log('✅ Container found:', container);
+
+            container.innerHTML = '';
+
+            // Ensure placement is updated from current UI
+            if (wizardState.quantity === 'single') {
+                const singlePeriodSelect = document.getElementById('singlePeriodSelect');
+                const singlePosition = document.getElementById('singlePosition');
+                if (singlePeriodSelect && singlePeriodSelect.value) {
+                    wizardState.selectedPeriods = [parseInt(singlePeriodSelect.value)];
+                    wizardState.placement = singlePosition?.value || 'after';
+                    console.log('✅ Captured single period:', {
+                        periodIndex: singlePeriodSelect.value,
+                        placement: singlePosition?.value
+                    });
+                } else {
+                    console.warn('⚠️ singlePeriodSelect element or value not found');
+                }
+            } else {
+                updateSelectedPeriods();
+            }
+
+            console.log('🔍 Current wizardState:', {
+                selectedPeriods: wizardState.selectedPeriods,
+                placement: wizardState.placement,
+                quantity: wizardState.quantity,
+                payDateOffset: wizardState.payDateOffset
+            });
+
+            console.log('📊 generatedCalendar status:', {
+                exists: !!generatedCalendar,
+                length: generatedCalendar?.length || 0,
+                sampleEntry: generatedCalendar?.[0]
+            });
+
+            if (wizardState.selectedPeriods.length === 0) {
+                console.warn('⚠️ No periods selected - cannot populate manual dates');
+                container.innerHTML = '<p style="color: var(--text-medium); font-size: 13px; padding: 12px;">Please select a period in the previous step.</p>';
+                return;
+            }
+
+            let inputsCreated = 0;
+            wizardState.selectedPeriods.forEach(periodIdx => {
+                console.log('🔍 Looking for period index:', periodIdx, 'Type:', typeof periodIdx);
+                const period = generatedCalendar.find(e => e.period === periodIdx && e.task === 'Pay Date');
+                console.log('🔍 Search result for period', periodIdx, ':', period);
+
+                if (!period) {
+                    console.error('❌ Period not found! Searching in generatedCalendar...');
+                    console.log('Available periods:', generatedCalendar
+                        .filter(e => e.task === 'Pay Date')
+                        .map(e => ({ period: e.period, label: e.periodLabel }))
+                    );
+                    return;
+                }
+
+                const dateInput = document.createElement('div');
+                dateInput.className = 'form-group';
+                dateInput.style.marginBottom = '16px';
+
+                const savedDate = wizardState.manualPayDates[periodIdx];
+
+                // v4.0: Calculate suggested date based on reference period and placement
+                const offset = wizardState.payDateOffset || 7; // Define offset outside if/else so it's accessible in template
+                let dateValue = '';
+                if (savedDate) {
+                    dateValue = savedDate.toISOString().split('T')[0];
+                } else {
+                    // Suggest a date based on the reference period's pay date and offset
+                    const refPayDate = new Date(period.date);
+                    const suggestedDate = new Date(refPayDate);
+
+                    if (wizardState.placement === 'before') {
+                        suggestedDate.setDate(suggestedDate.getDate() - offset);
+                    } else {
+                        suggestedDate.setDate(suggestedDate.getDate() + offset);
+                    }
+
+                    dateValue = suggestedDate.toISOString().split('T')[0];
+
+                    // v4.0: AUTO-SAVE - Store suggested date immediately so validation passes
+                    wizardState.manualPayDates[periodIdx] = suggestedDate;
+                }
+
+                dateInput.innerHTML = `
+                    <label>Off-Cycle Pay Date ${wizardState.placement} ${period.periodLabel}</label>
+                    <input type="date"
+                           data-period="${periodIdx}"
+                           value="${dateValue}"
+                           onchange="updateManualPayDate(${periodIdx}, this.value)"
+                           onclick="event.stopPropagation()"
+                           onfocus="event.stopPropagation()"
+                           style="width: 100%; padding: 10px; border: 1.5px solid var(--border-light); border-radius: 6px; font-size: 14px;">
+                    <span class="help-text">Please select the Pay Date for the Off-Cycle.</span>
+                `;
+                console.log('✅ Created date input HTML for period', periodIdx);
+                console.log('📝 Date input HTML:', dateInput.outerHTML.substring(0, 200) + '...');
+                container.appendChild(dateInput);
+                inputsCreated++;
+                console.log('✅ Appended date input to container. Total inputs:', inputsCreated);
+            });
+
+            console.log('🎉 populateManualPayDates complete. Total inputs created:', inputsCreated);
+            console.log('📦 Final container HTML length:', container.innerHTML.length);
+        }
+
+        function updateManualPayDate(periodIdx, dateString) {
+            if (dateString) {
+                wizardState.manualPayDates[periodIdx] = new Date(dateString);
+            } else {
+                delete wizardState.manualPayDates[periodIdx];
+            }
+        }
+
+        // Step 4: Task Selection
+        // v4.0: Simplified - Always custom mode, no mode selection needed
+
+        function populateTaskSelector() {
+            const container = document.getElementById('taskCheckboxList');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            // v4.0: Exclude "Pay Date" from task selector since it's already configured in Step 3
+            tasks.forEach((task, index) => {
+                if (task.name === 'Pay Date') return; // Skip Pay Date task
+
+                const checkbox = document.createElement('label');
+                checkbox.className = 'period-checkbox';
+                checkbox.innerHTML = `
+                    <input type="checkbox"
+                           value="${index}"
+                           onchange="updateSelectedTasks()"
+                           ${wizardState.selectedTasks.includes(index) ? 'checked' : ''}>
+                    <span>${task.name}</span>
+                `;
+                container.appendChild(checkbox);
+            });
+        }
+
+        function updateSelectedTasks() {
+            const checkboxes = document.querySelectorAll('#taskCheckboxList input[type="checkbox"]');
+            wizardState.selectedTasks = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => parseInt(cb.value));
+        }
+
+        // Step 5: Offset Configuration
+        // v4.0: Simplified - Always date picker mode, no toggle
+
+        function toggleApplyToAll() {
+            populateOffsetEditor();
+        }
+
+        // v4.0: Helper function to get period name/label from period index
+        function getPeriodName(periodIdx) {
+            // Look up the period in the generated calendar
+            const periodEntry = generatedCalendar.find(entry => entry.period === periodIdx);
+            if (periodEntry && periodEntry.periodLabel) {
+                return periodEntry.periodLabel;
+            }
+            // Fallback to generic label
+            return `Period ${periodIdx}`;
+        }
+
+        function populateOffsetEditor() {
+            if (wizardState.offsetMode !== 'custom') return;
+
+            const container = document.getElementById('offsetInputList');
+            container.innerHTML = '';
+
+            // Show/hide the "apply to all" checkbox for multiple off-cycles
+            const multipleOption = document.getElementById('multipleOffCycleOption');
+            const applyToAllCheckbox = document.getElementById('applyToAllOffCycles');
+            const applyToAll = applyToAllCheckbox ? applyToAllCheckbox.checked : true;
+
+            if (wizardState.quantity === 'multiple' && wizardState.selectedPeriods.length > 1) {
+                multipleOption.style.display = 'block';
+                document.getElementById('offCycleCountDisplay').textContent = wizardState.selectedPeriods.length;
+            } else {
+                multipleOption.style.display = 'none';
+            }
+
+            // Initialize state objects if not present
+            if (!wizardState.taskSpecificDates) wizardState.taskSpecificDates = {};
+
+            // Get task list based on task mode
+            const taskList = wizardState.taskMode === 'custom'
+                ? wizardState.selectedTasks.map(idx => ({ index: idx, task: tasks[idx] }))
+                : tasks.map((task, index) => ({ index, task }));
+
+            // v4.0: Determine which periods to show
+            const periodsToShow = (wizardState.quantity === 'multiple' && !applyToAll)
+                ? wizardState.selectedPeriods
+                : [wizardState.selectedPeriods[0]]; // Show only first period if applying to all
+
+            // Loop through periods (one if applying to all, multiple if not)
+            periodsToShow.forEach((periodIdx, periodSeqNum) => {
+                // Add period header if showing multiple periods
+                if (periodsToShow.length > 1) {
+                    const periodHeader = document.createElement('div');
+                    const periodName = getPeriodName(periodIdx);
+                    periodHeader.style.cssText = 'background: #F0F9FF; padding: 12px 16px; margin-top: 16px; border-left: 3px solid #0EA5E9; font-weight: 600; font-size: 14px; color: var(--text-dark);';
+                    periodHeader.textContent = `${periodName} Off-Cycle (${periodSeqNum + 1} of ${periodsToShow.length})`;
+                    container.appendChild(periodHeader);
+                }
+
+                // Loop through tasks for this period
+                taskList.forEach(({index, task}) => {
+                    const defaultOffset = task.offset || 0;
+                    const currentOffset = wizardState.customOffsets[index] !== undefined
+                        ? wizardState.customOffsets[index]
+                        : defaultOffset;
+
+                    // v4.0: Use composite key for storing dates per period and task
+                    const dateKey = `${periodIdx}_${index}`;
+                    const specificDate = wizardState.taskSpecificDates[dateKey];
+
+                    // v4.0: Calculate suggested date based on off-cycle pay date and task offset
+                    let dateValue = '';
+                    if (specificDate) {
+                        dateValue = specificDate.toISOString().split('T')[0];
+                    } else {
+                        // Determine the off-cycle pay date (use manual date if specified, otherwise calculate)
+                        let offCyclePayDate;
+                        if (wizardState.payDateMode === 'manual' && wizardState.manualPayDates[periodIdx]) {
+                            // Use the manually selected pay date
+                            offCyclePayDate = new Date(wizardState.manualPayDates[periodIdx]);
+                        } else {
+                            // Calculate from reference period and offset
+                            const refPeriod = generatedCalendar.find(e => e.period === periodIdx && e.task === 'Pay Date');
+                            if (refPeriod) {
+                                const refPayDate = new Date(refPeriod.date);
+                                const payDateOffset = wizardState.payDateOffset || 7;
+                                offCyclePayDate = new Date(refPayDate);
+                                if (wizardState.placement === 'before') {
+                                    offCyclePayDate.setDate(offCyclePayDate.getDate() - payDateOffset);
+                                } else {
+                                    offCyclePayDate.setDate(offCyclePayDate.getDate() + payDateOffset);
+                                }
+                            }
+                        }
+
+                        if (offCyclePayDate) {
+                            // Default to same week as off-cycle pay date - use pay date itself as starting point
+                            const suggestedTaskDate = new Date(offCyclePayDate);
+                            const taskOffset = parseInt(currentOffset) || 0;
+
+                            // Adjust based on whether task is before or after pay date
+                            if (task.beforePayDate && taskOffset !== 0) {
+                                suggestedTaskDate.setDate(suggestedTaskDate.getDate() - Math.abs(taskOffset));
+                            } else if (task.afterPayDate && taskOffset !== 0) {
+                                suggestedTaskDate.setDate(suggestedTaskDate.getDate() + Math.abs(taskOffset));
+                            }
+                            // If task has no specific timing (not before or after), default to pay date itself
+
+                            dateValue = suggestedTaskDate.toISOString().split('T')[0];
+                        }
+                    }
+
+                    const inputGroup = document.createElement('div');
+                    inputGroup.style.cssText = 'padding: 16px 12px; border-bottom: 1px solid var(--border-light);';
+
+                    // v4.0: Simplified - Always show date picker
+                    inputGroup.innerHTML = `
+                        <div style="margin-bottom: 8px;">
+                            <span style="font-size: 14px; color: var(--text-dark); font-weight: 500;">${task.name}</span>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-medium); display: block; margin-bottom: 4px;">Select Date</label>
+                            <input type="date"
+                                   value="${dateValue}"
+                                   onchange="updateTaskSpecificDate('${dateKey}', this.value)"
+                                   onclick="event.stopPropagation()"
+                                   onfocus="event.stopPropagation()"
+                                   style="width: 100%; padding: 10px 12px; border: 1.5px solid var(--border-light); border-radius: 4px; font-size: 14px;">
+                            <span style="font-size: 11px; color: var(--text-light); margin-top: 4px; display: block;">Please select the due date for this off-cycle pay-period task.</span>
+                        </div>
+                        ${specificDate ? '<div style="margin-top: 8px; font-size: 12px; color: var(--success-teal);">✓ Date confirmed</div>' : ''}
+                    `;
+
+                    container.appendChild(inputGroup);
+                });
+            });
+        }
+
+        function updateTaskSpecificDate(dateKey, dateString) {
+            // v4.0: dateKey can be either taskIndex (for single/apply-to-all) or "periodIdx_taskIndex" (for individual config)
+            if (!wizardState.taskSpecificDates) wizardState.taskSpecificDates = {};
+            if (dateString) {
+                wizardState.taskSpecificDates[dateKey] = new Date(dateString);
+                // Re-render to show the confirmation message
+                populateOffsetEditor();
+            } else {
+                delete wizardState.taskSpecificDates[dateKey];
+                populateOffsetEditor();
+            }
+        }
+
+        function updateCustomOffset(taskIndex, value) {
+            wizardState.customOffsets[taskIndex] = parseInt(value) || 0;
+        }
+
+        // Step 6: Advanced Rules
+        function renderOffCycleConstraints() {
+            const container = document.getElementById('offCycleConstraintsList');
+
+            if (wizardState.constraints.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 24px; color: var(--text-light); background: #fafafa; border-radius: 8px;">
+                        <p style="font-size: 14px;">No constraint rules added yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
+            wizardState.constraints.forEach((constraint, idx) => {
+                html += `
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: white; border: 1.5px solid var(--border-light); border-radius: 6px;">
+                        <span style="font-size: 13px; color: var(--text-dark);">
+                            <strong>${constraint.task1Name}</strong> ≠ <strong>${constraint.task2Name}</strong>
+                        </span>
+                        <button onclick="removeOffCycleConstraint(${idx})" style="background: none; border: none; color: var(--danger-red); cursor: pointer; font-size: 18px; padding: 0 8px;">&times;</button>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function addOffCycleConstraint() {
+            const taskList = wizardState.taskMode === 'custom'
+                ? wizardState.selectedTasks
+                : tasks.map((t, i) => i);
+
+            if (taskList.length < 2) {
+                showMessage('Need at least 2 tasks to create a constraint rule.', 'error');
+                return;
+            }
+
+            // Show inline constraint selector
+            const container = document.getElementById('offCycleConstraintsList');
+            const selectorHtml = `
+                <div id="offCycleConstraintSelector" style="background: #f9fafb; border: 2px solid var(--primary-purple); border-radius: 8px; padding: 16px; margin-bottom: 12px;">
+                    <div style="font-weight: 600; margin-bottom: 12px; color: var(--text-dark);">Add Constraint Rule</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-medium); display: block; margin-bottom: 4px;">Task 1</label>
+                            <select id="offCycleTask1" style="width: 100%; padding: 8px; border: 1.5px solid var(--border-light); border-radius: 6px; font-size: 14px;">
+                                <option value="">Select task...</option>
+                                ${taskList.map(idx => `<option value="${idx}">${tasks[idx].name}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-medium); display: block; margin-bottom: 4px;">Task 2</label>
+                            <select id="offCycleTask2" style="width: 100%; padding: 8px; border: 1.5px solid var(--border-light); border-radius: 6px; font-size: 14px;">
+                                <option value="">Select task...</option>
+                                ${taskList.map(idx => `<option value="${idx}">${tasks[idx].name}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="primary" onclick="confirmOffCycleConstraint()" style="flex: 1;">Add Rule</button>
+                        <button class="secondary" onclick="cancelOffCycleConstraint()">Cancel</button>
+                    </div>
+                </div>
+            `;
+
+            // Remove existing selector if present
+            const existingSelector = document.getElementById('offCycleConstraintSelector');
+            if (existingSelector) {
+                existingSelector.remove();
+            }
+
+            // Insert at the top of the container
+            container.insertAdjacentHTML('afterbegin', selectorHtml);
+        }
+
+        function confirmOffCycleConstraint() {
+            const task1Idx = parseInt(document.getElementById('offCycleTask1').value);
+            const task2Idx = parseInt(document.getElementById('offCycleTask2').value);
+
+            if (isNaN(task1Idx) || isNaN(task2Idx)) {
+                showMessage('Please select both tasks for the constraint rule.', 'error');
+                return;
+            }
+
+            if (task1Idx === task2Idx) {
+                showMessage('Please select two different tasks.', 'error');
+                return;
+            }
+
+            wizardState.constraints.push({
+                id: Date.now(),
+                task1Index: task1Idx,
+                task2Index: task2Idx,
+                task1Name: tasks[task1Idx].name,
+                task2Name: tasks[task2Idx].name
+            });
+
+            cancelOffCycleConstraint();
+            renderOffCycleConstraints();
+        }
+
+        function cancelOffCycleConstraint() {
+            const selector = document.getElementById('offCycleConstraintSelector');
+            if (selector) {
+                selector.remove();
+            }
+        }
+
+        function removeOffCycleConstraint(index) {
+            wizardState.constraints.splice(index, 1);
+            renderOffCycleConstraints();
+        }
+
+        // Finish Wizard
+        function finishOffCycleWizard() {
+            // Final validation
+            if (!validateWizardStep(wizardState.currentStep)) {
+                return;
+            }
+
+            // Update placement from UI one final time
+            if (wizardState.quantity === 'single') {
+                wizardState.selectedPeriods = [parseInt(document.getElementById('singlePeriodSelect').value)];
+                wizardState.placement = document.getElementById('singlePosition').value;
+            } else {
+                wizardState.placement = document.getElementById('multiplePosition').value;
+            }
+
+            // Create off-cycle configuration
+            const offCycleConfig = {
+                id: Date.now(),
+                customName: wizardState.offCycleName || '', // v4.0: Optional custom name
+                placement: wizardState.placement,
+                relativeToPeriods: [...wizardState.selectedPeriods],
+                payDates: {
+                    mode: wizardState.payDateMode,
+                    offsetDays: wizardState.payDateOffset,
+                    dates: {...wizardState.manualPayDates}
+                },
+                tasks: {
+                    mode: wizardState.taskMode,
+                    selectedTasks: [...wizardState.selectedTasks],
+                    offsets: {
+                        mode: wizardState.offsetMode,
+                        customOffsets: {...wizardState.customOffsets},
+                        specificDates: {...(wizardState.taskSpecificDates || {})} // v4.0: Include specific dates
+                    }
+                },
+                advancedRules: [...wizardState.constraints]
+            };
+
+            // Add to global off-cycle periods array
+            offCyclePeriods.push(offCycleConfig);
+
+            // Regenerate calendar with off-cycles
+            generateCalendar();
+
+            // Close wizard
+            closeOffCycleWizard();
+
+            showMessage('Off-cycle period(s) added successfully! Scroll down to see the updated calendar.', 'success');
+        }
+
         window.onload = init;
     </script>
 
     <!-- Pay Date Override Modal -->
     <!-- Unified Edit Modal -->
     <div id="unifiedEditModal" class="modal-overlay" style="display: none;">
-        <div class="modal" style="max-width: 90%; width: auto; padding-bottom: 0;">
+        <div class="modal" style="max-width: 90%; width: auto; max-height: 90vh; overflow-y: auto; padding-bottom: 0;">
             <h3 style="margin-bottom: 20px;">Edit Period: <span id="unifiedPeriodLabel"></span></h3>
 
             <!-- Tab Navigation -->
@@ -5669,6 +7026,202 @@
             </div>
             <div class="modal-footer">
                 <button class="secondary" onclick="closeConstraintsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Off-Cycle Wizard Modal (v4.0) -->
+    <div id="offCycleWizard" class="modal-overlay" style="display: none;">
+        <div class="modal wizard-modal">
+            <h3 style="margin-bottom: 24px;">Add Off-Cycle Payroll(s)</h3>
+
+            <!-- Progress Indicator -->
+            <div class="wizard-progress">
+                <div class="wizard-step active" data-step="1">
+                    <div class="wizard-step-number">1</div>
+                    <div class="wizard-step-label">Quantity</div>
+                </div>
+                <div class="wizard-step" data-step="2">
+                    <div class="wizard-step-number">2</div>
+                    <div class="wizard-step-label">Placement</div>
+                </div>
+                <div class="wizard-step" data-step="3">
+                    <div class="wizard-step-number">3</div>
+                    <div class="wizard-step-label">Pay Dates</div>
+                </div>
+                <div class="wizard-step" data-step="4">
+                    <div class="wizard-step-number">4</div>
+                    <div class="wizard-step-label">Tasks</div>
+                </div>
+                <div class="wizard-step" data-step="5">
+                    <div class="wizard-step-number">5</div>
+                    <div class="wizard-step-label">Offsets</div>
+                </div>
+                <div class="wizard-step" data-step="6">
+                    <div class="wizard-step-number">6</div>
+                    <div class="wizard-step-label">Rules</div>
+                </div>
+            </div>
+
+            <!-- Wizard Content -->
+            <div class="wizard-content">
+
+                <!-- Step 1: Quantity Selection -->
+                <div id="wizardStep1" class="wizard-panel active">
+                    <h4 style="margin-bottom: 16px; color: var(--text-dark);">How many off-cycles are you adding?</h4>
+
+                    <div class="option-card" onclick="selectOffCycleQuantity('single')" id="quantitySingle">
+                        <h4>A Single Off-Cycle</h4>
+                        <p>Add one off-cycle payroll period before or after a specific pay period</p>
+                    </div>
+
+                    <div class="option-card" onclick="selectOffCycleQuantity('multiple')" id="quantityMultiple">
+                        <h4>Multiple Off-Cycles</h4>
+                        <p>Add off-cycle payroll periods before or after multiple pay periods</p>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 24px;">
+                        <label>Off-Cycle Name (Optional)</label>
+                        <input type="text"
+                               id="offCycleName"
+                               placeholder="e.g., Christmas Bonus, Mid-Month Bonus"
+                               onchange="wizardState.offCycleName = this.value"
+                               style="width: 100%; padding: 10px; border: 1.5px solid var(--border-light); border-radius: 6px; font-size: 14px;">
+                        <span class="help-text">Give this off-cycle a custom name. If left blank, it will use the default naming (e.g., "January 2025 Post-Off-Cycle")</span>
+                    </div>
+                </div>
+
+                <!-- Step 2: Period Placement -->
+                <div id="wizardStep2" class="wizard-panel">
+                    <h4 style="margin-bottom: 16px; color: var(--text-dark);">Where should the off-cycle(s) be placed?</h4>
+
+                    <!-- Single Off-Cycle Placement -->
+                    <div id="singlePlacement" style="display: none;">
+                        <div class="form-group">
+                            <label>Position</label>
+                            <select id="singlePosition" style="width: 100%; padding: 10px; border: 1.5px solid var(--border-light); border-radius: 6px; font-size: 14px;">
+                                <option value="before">Before</option>
+                                <option value="after">After</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-top: 16px;">
+                            <label>Pay Period</label>
+                            <select id="singlePeriodSelect" style="width: 100%; padding: 10px; border: 1.5px solid var(--border-light); border-radius: 6px; font-size: 14px;">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Multiple Off-Cycles Placement -->
+                    <div id="multiplePlacement" style="display: none;">
+                        <div class="form-group">
+                            <label>Position</label>
+                            <select id="multiplePosition" style="width: 100%; padding: 10px; border: 1.5px solid var(--border-light); border-radius: 6px; font-size: 14px;">
+                                <option value="before">Before</option>
+                                <option value="after">After</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-top: 16px;">
+                            <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <input type="checkbox" id="allPeriodsCheckbox" onchange="toggleAllPeriods()">
+                                <span>All Pay Periods</span>
+                            </label>
+                        </div>
+                        <div id="periodSelectorContainer">
+                            <label>Select Pay Periods</label>
+                            <div class="period-selector" id="multiplePeriodSelect">
+                                <!-- Populated dynamically with checkboxes -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Pay Date Configuration -->
+                <div id="wizardStep3" class="wizard-panel">
+                    <h4 style="margin-bottom: 16px; color: var(--text-dark);">Configure off-cycle pay dates</h4>
+
+                    <p style="font-size: 13px; color: var(--text-medium); margin-bottom: 20px;">Select the specific pay date(s) for your off-cycle period(s):</p>
+
+                    <!-- v4.0: Simplified - Manual Date Entry Only -->
+                    <div style="border: 2px solid var(--primary-purple); border-radius: 8px; padding: 20px; background: #F5F3FF;">
+                        <div id="manualPayDateConfig">
+                            <div id="manualPayDateList">
+                                <!-- Populated dynamically based on selected periods -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Task Selection -->
+                <div id="wizardStep4" class="wizard-panel">
+                    <h4 style="margin-bottom: 16px; color: var(--text-dark);">Create off-cycle task list</h4>
+                    <p style="font-size: 13px; color: var(--text-medium); margin-bottom: 20px;">Select the tasks to include in your off-cycle periods:</p>
+
+                    <!-- v4.0: Simplified - Custom Task Selection Only -->
+                    <div id="customTaskSelector" style="margin-top: 20px;">
+                        <label style="font-weight: 500; margin-bottom: 12px; display: block;">Select Tasks</label>
+                        <div class="period-selector" id="taskCheckboxList">
+                            <!-- Populated dynamically with task checkboxes -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Task Due Dates -->
+                <div id="wizardStep5" class="wizard-panel">
+                    <h4 style="margin-bottom: 16px; color: var(--text-dark);">Task Due Dates</h4>
+
+                    <p style="color: var(--text-medium); margin-bottom: 20px; font-size: 13px;">
+                        Select specific dates for each task in your off-cycle periods.
+                    </p>
+
+                    <!-- v4.0: Single scrollable container with checkbox inside -->
+                    <div id="customOffsetEditor" style="max-height: 500px; overflow-y: auto; border: 1px solid var(--border-light); border-radius: 8px; padding: 16px; background: white;">
+
+                        <!-- Multiple off-cycles: option to apply to all or customize each -->
+                        <div id="multipleOffCycleOption" style="display: none; background: #F0F9FF; border: 1.5px solid #0EA5E9; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px;">
+                            <label style="display: flex; align-items: start; gap: 12px; cursor: pointer;">
+                                <input type="checkbox" id="applyToAllOffCycles" checked onchange="toggleApplyToAll()" style="margin-top: 2px;">
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; font-size: 14px; color: var(--text-dark); margin-bottom: 4px;">
+                                        Apply same dates/offsets to all off-cycles
+                                    </div>
+                                    <div style="font-size: 12px; color: var(--text-medium); line-height: 1.4;">
+                                        When checked, the dates you select below will be applied to all <span id="offCycleCountDisplay"></span> off-cycle periods you're adding. Uncheck to customize dates for each off-cycle individually.
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div id="offsetInputList">
+                            <!-- Populated dynamically with date pickers -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6: Advanced Rules (Optional) -->
+                <div id="wizardStep6" class="wizard-panel">
+                    <h4 style="margin-bottom: 16px; color: var(--text-dark);">Advanced task rules (optional)</h4>
+                    <p style="color: var(--text-medium); margin-bottom: 20px; font-size: 14px;">
+                        Add constraint rules specific to off-cycle periods. These rules will only apply to the off-cycles you're creating.
+                    </p>
+
+                    <div id="offCycleConstraintsList" style="margin-bottom: 20px;">
+                        <!-- Populated dynamically with constraints -->
+                    </div>
+
+                    <button class="secondary" onclick="addOffCycleConstraint()" style="width: 100%;">+ Add Constraint Rule</button>
+                </div>
+
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="wizard-buttons">
+                <button class="secondary" onclick="closeOffCycleWizard()">Cancel</button>
+                <div style="display: flex; gap: 12px;">
+                    <button class="secondary" id="wizardBackBtn" onclick="wizardPrevStep()" style="display: none;">← Back</button>
+                    <button class="primary" id="wizardNextBtn" onclick="wizardNextStep()">Next →</button>
+                    <button class="primary" id="wizardFinishBtn" onclick="finishOffCycleWizard()" style="display: none;">Add to Calendar</button>
+                </div>
             </div>
         </div>
     </div>
